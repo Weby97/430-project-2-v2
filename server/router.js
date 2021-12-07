@@ -10,8 +10,8 @@ const router = (app) => {
   app.get('/home', mid.requiresLogin, controllers.Note.indexPage);
   app.get('/getRandom', mid.requiresLogin, controllers.Note.getRandom);
   app.post('/write', mid.requiresLogin, controllers.Note.make);
-  //app.post('/maker', mid.requiresLogin, controllers.Domo.make);
-  //app.get('/random', mid.requiresLogin, controllers.Domo.randomPage);
+  // app.post('/maker', mid.requiresLogin, controllers.Domo.make);
+  // app.get('/random', mid.requiresLogin, controllers.Domo.randomPage);
   app.get('/', mid.requiresSecure, mid.requiresLogout, controllers.Account.loginPage);
 };
 

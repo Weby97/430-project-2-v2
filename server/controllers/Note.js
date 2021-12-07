@@ -46,7 +46,7 @@ const getNotes = (request, response) => {
 };
 
 const getRandomNote = (request, response) => {
-  const req = request;
+  // const req = request;
   const res = response;
 
   return Note.NoteModel.findRandom((err, docs) => {
