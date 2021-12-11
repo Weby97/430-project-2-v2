@@ -1,5 +1,7 @@
 // const { signup } = require("../../server/controllers/Account");
 
+// const { password } = require("../../server/controllers/Account");
+
 const handleLogin = (e) => {
     e.preventDefault();
 
@@ -33,6 +35,24 @@ const handleSignup = (e) => {
     return false;
 }
 
+const handlePassword = (e) => {
+    e.preventDefault();
+
+    if ($("user").val() == '' || $("pass").val() == '' || $("pass2").val() == '' || $("pass3").val() == '') {
+        handleError("All fields are required");
+        return false;
+    }
+
+    if ($("pass2").val() !== $("pass3").val()) {
+        handleError("Passwords do not match");
+        return false;
+    }
+
+    sendAjax('POST', $("#passForm").attr("action"), $("#passForm").serialize(), redirect);
+
+    return false;
+}
+
 const LoginWindow = (props) => {
     return (
         <form id="loginForm" name="loginForm"
@@ -43,6 +63,7 @@ const LoginWindow = (props) => {
         >
             <label htmlFor="username">Username: </label>
             <input id="user" type="text" name="username" placeholder="username" />
+            <br></br><br></br>
             <label htmlFor="pass">Password: </label>
             <input id="pass" type="password" name="pass" placeholder="password" />
             <input type="hidden" name="_csrf" value={props.csrf} />
@@ -63,12 +84,41 @@ const SignupWindow = (props) => {
         >
             <label htmlFor="username">Username: </label>
             <input id="user" type="text" name="username" placeholder="username" />
+            <br></br><br></br>
             <label htmlFor="pass">Password: </label>
             <input id="pass" type="password" name="pass" placeholder="password" />
+            <br></br><br></br>
             <label htmlFor="pass2">Password: </label>
             <input id="pass2" type="password" name="pass2" placeholder="retype password" />
             <input type="hidden" name="_csrf" value={props.csrf} />
             <input className="formSubmit" type="submit" value="Sign Up" />
+
+        </form>
+    );
+};
+
+const PasswordWindow = (props) => {
+    return (
+        <form id="passForm"
+            name="passForm"
+            onSubmit={handlePassword}
+            action="/password"
+            method="POST"
+            className="mainForm"
+        >
+            <label htmlFor="username">Username: </label>
+            <input id="user" type="text" name="username" placeholder="username" />
+            <br></br><br></br>
+            <label htmlFor="pass">Current Password: </label>
+            <input id="pass" type="password" name="pass" placeholder="password" />
+            <br></br><br></br>
+            <label htmlFor="pass2">New Password: </label>
+            <input id="pass2" type="password" name="pass2" placeholder="new password" />
+            <br></br><br></br>
+            <label htmlFor="pass3">Confirm New Password: </label>
+            <input id="pass3" type="password" name="pass3" placeholder="retype new password" />
+            <input type="hidden" name="_csrf" value={props.csrf} />
+            <input className="formSubmit" type="submit" value="Change Password" />
 
         </form>
     );
@@ -88,9 +138,23 @@ const createSignupWindow = (csrf) => {
     );
 };
 
+const createPasswordWindow = (csrf) => {
+    ReactDOM.render(
+        <PasswordWindow csrf={csrf} />,
+        document.querySelector("#content")
+    );
+};
+
 const setup = (csrf) => {
     const loginButton = document.querySelector("#loginButton");
     const signupButton = document.querySelector("#signupButton");
+    const passwordButton = document.querySelector("#passwordButton");
+
+    passwordButton.addEventListener("click", (e) => {
+        e.preventDefault();
+        createPasswordWindow(csrf);
+        return false;
+    });
 
     signupButton.addEventListener("click", (e) => {
         e.preventDefault();

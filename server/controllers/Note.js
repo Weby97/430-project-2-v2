@@ -2,6 +2,7 @@ const models = require('../models');
 
 const { Note } = models;
 
+// Used to make a note and send to mongoDB
 const makeNote = (req, res) => {
   if (!req.body.name || !req.body.note) {
     return res.status(400).json({ error: 'Name and Message are both required.' });
@@ -31,6 +32,7 @@ const makeNote = (req, res) => {
   return notePromise;
 };
 
+// Get a Note from the database
 const getNotes = (request, response) => {
   const req = request;
   const res = response;
@@ -45,6 +47,7 @@ const getNotes = (request, response) => {
   });
 };
 
+// Grab a Random Note from the database
 const getRandomNote = (request, response) => {
   // const req = request;
   const res = response;
@@ -59,6 +62,20 @@ const getRandomNote = (request, response) => {
   });
 };
 
+// Allows you to get all data from the Note model
+const getAll = (request, response) => {
+  const res = response;
+  return Note.NoteModel.find({}, (err, docs) => {
+    if (err) {
+      console.log(err);
+      return res.status(400).json({ error: 'An error occurred' });
+    }
+
+    return res.json({ note: docs });
+  });
+};
+
+// Load Index Page
 const indexPage = (req, res) => {
   Note.NoteModel.findByOwner(req.session.account._id, (err, docs) => {
     if (err) {
@@ -70,6 +87,7 @@ const indexPage = (req, res) => {
   });
 };
 
+module.exports.getAll = getAll;
 module.exports.getRandom = getRandomNote;
 module.exports.getNotes = getNotes;
 module.exports.make = makeNote;
